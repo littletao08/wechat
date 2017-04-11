@@ -10,8 +10,6 @@ class Config(object):
     # 一个SECRET_KEY, 使一些需要加密的插件生效
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'my_secret_key'
     WECHAT_TOKEN = os.environ.get('WECHAT_TOKEN') or 'syy'
-    APP_ID = os.environ.get('APP_ID')
-    APP_SECRET = os.environ.get('APP_SECRET')
     ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/cgi-bin/token'
     ADD_TEMP_MATERIAL_URL = 'https://api.weixin.qq.com/cgi-bin/media/upload'
     ADD_MATERIAL_URL = \
