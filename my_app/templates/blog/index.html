@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>主页</title>
-</head>
-<body>
+{% extends 'blog/base.html' %}
+
+{% block title %}主页{% endblock %}
+
+
+{% block content %}
     {% if current_user.is_authenticated %}
         <h3>Hi, {{ current_user.name }}</h3>
     {% else %}
         <p>点击<a href="{{ url_for('blog.regist') }}">注册</a></p>
         <p>已有账号, 点击这里<a href="{{ url_for('blog.login') }}">登录</a></p>
     {% endif %}
-</body>
-</html>
+{% endblock %}
