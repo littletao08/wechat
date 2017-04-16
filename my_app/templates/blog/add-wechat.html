@@ -1,0 +1,14 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}添加微信公众号{% endblock %}
+
+{% block content %}
+    <form action="{{ url_for('blog.add_wechat') }}" method="POST">
+        {{ form.csrf_token }}
+        {{ form.app_id.label }} : {{ form.app_id() }}
+        {{ form.app_secret.label }} : {{ form.app_secret() }}
+        {{ form.wechat_id.label }} : {{ form.wechat_id() }}
+        {{ form.token.label }} : {{ form.token() }}
+        {{ form.submit() }}
+    </form>
+{% endblock %}
