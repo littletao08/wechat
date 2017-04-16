@@ -16,6 +16,7 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField(u'记住登录状态')
     submit = SubmitField(u'登录')
 
+
 class RegisterForm(FlaskForm):
     """
     用户注册表单
@@ -34,3 +35,14 @@ class RegisterForm(FlaskForm):
     def validate_name(self, field):
         if Account.query.filter_by(name=field.data).first():
             raise ValidationError(u'用户名已存在')
+
+
+class AddWechatForm(FlaskForm):
+    """
+    添加公众号表单
+    """
+    app_id = StringField(u'app_id', validators=[Required()])
+    app_secret = StringField(u'app_secret', validators=[Required()])
+    wechat_id = StringField(u'微信公众号', validators=[Required()])
+    token = StringField(u'接入token', validators=[Required()])
+    submit = SubmitField(u'添加')
