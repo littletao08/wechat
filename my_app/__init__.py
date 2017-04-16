@@ -9,12 +9,18 @@ import logging
 
 from flask import Flask, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 
 from config import config
 
 
 # 指定数据库
 db = SQLAlchemy()
+# 设置flask_login
+login_manager = LoginManager()
+login_manager.login_view = 'auth.login'
+login_manager.login_message = u'请先登录.'
+login_manager.login_message_category = 'warning'
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -22,10 +28,13 @@ def create_app(config_name):
 
     # 初始化插件
     db.init_app(app)
+    login_manager.init_app(app)
 
     # 注册各个蓝图模块到app
     from my_app.main.views import wechat
+    from my_app.blog.views import blog
     app.register_blueprint(wechat, url_prefix='/wechat')
+    app.register_blueprint(blog)
 
     # 初始化数据库
     with app.app_context():
