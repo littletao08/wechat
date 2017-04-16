@@ -28,12 +28,11 @@ class MainView(MethodView):
                 if check_signature(signature, timestamp, nonce, token):
                     return echostr
                 else:
-                    print u'错误'
-                    return ""
+                    return u"校验不通过"
             except Exception as e:
-                return echostr
+                return str(e), u'校验过程出错'
 
-        return ""
+        return u"数据库比对失败"
 
     def post(self):
        pass
