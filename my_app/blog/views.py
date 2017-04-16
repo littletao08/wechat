@@ -1,10 +1,10 @@
 # coding: utf-8
 
 from flask import request, Blueprint, render_template, redirect, flash, url_for
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, login_required
 
-from my_app.blog.forms import LoginForm, RegisterForm
-from my_app.models import Account
+from my_app.blog.forms import LoginForm, RegisterForm, AddWechatForm
+from my_app.models import Account, Token
 from my_app import db
 
 blog = Blueprint('blog', __name__)
@@ -83,7 +83,40 @@ def login():
     return render_template('blog/login.html', form=form)
 
 @blog.route('/add-wechat', methods=['GET', 'POST'])
+@login_required
 def add_wechat():
-    pass
+    """
+    添加微信公众号视图
+    """
+    form = AddWechatForm(request.form)
+    if form.validate_on_submit():
+        app_id = form.app_id.data
+        app_secret = form.app_secret.data
+        wechat_id = form.wechat_id.data
+        token = form.token.data
 
+        t = Token.query.filter_by(app_id=app_id).first()
+        if t:
+            flash(u'您所添加的微信app_id已存在, 请添加其他公众号', 'warning')
+            return redirect(url_for('blog.add_wechat'))
 
+        email = current_user.email
+        account = Account.query.filter_by(email=email).first()
+
+        t = Token()
+        t.app_id = app_id
+        t.app_secret = app_secret
+        t.wechat_id = wechat_id
+        t.token = token
+        t.account = account
+
+        db.session.add(t)
+        db.session.commit()
+
+        flash(u'添加公众号成功!', 'success')
+        return redirect(url_for('blog.index'))
+
+    if form.errors:
+        flash(form.errors, 'danger')
+
+    return render_template('blog/add-wechat.html', form=form)
