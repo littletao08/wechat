@@ -18,7 +18,7 @@ from config import config
 db = SQLAlchemy()
 # 设置flask_login
 login_manager = LoginManager()
-login_manager.login_view = 'auth.login'
+login_manager.login_view = 'blog.login'
 login_manager.login_message = u'请先登录.'
 login_manager.login_message_category = 'warning'
 
