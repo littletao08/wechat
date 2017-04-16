@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% block head %}
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+{% endblock %}
+</head>
+<body>
+    {% block message %}
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <ul class="{{ category }}">
+                {{ message }}
+            </ul>
+        {% endfor %}
+    {% endblock %}
+    {% block content %} {% endblock %}
+</body>
+</html>
