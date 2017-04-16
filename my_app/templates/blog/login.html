@@ -1,0 +1,13 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}登录{% endblock %}
+
+{% block content %}
+    <form action="{{ url_for('blog.login') }}" method="POST">
+        {{ form.csrf_token }}
+        {{ form.email.label }} {{ form.email() }}
+        {{ form.password.label }} {{ form.password() }}
+        {{ form.remember_me() }} {{ form.remember_me.label }}
+        {{ form.submit() }}
+    </form>
+{% endblock %}
