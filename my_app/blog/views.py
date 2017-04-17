@@ -12,7 +12,10 @@ blog = Blueprint('blog', __name__)
 
 @blog.route('/')
 def index():
-    return render_template('blog/index.html')
+    wechat_list = []
+    if current_user.is_authenticated:
+        wechat_list  = Account.query.filter_by(email=current_user.email).first_or_404().tokens.all()
+    return render_template('blog/index.html', wechat_len=len(wechat_list), wechat_list=wechat_list)
 
 @blog.route('/register', methods=['GET', 'POST'])
 def register():
