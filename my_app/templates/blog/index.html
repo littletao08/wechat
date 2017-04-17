@@ -6,6 +6,14 @@
 {% block content %}
     {% if current_user.is_authenticated %}
         <h3>Hi, {{ current_user.name }}</h3>
+        <p>您已绑定的公众号: {{ wechat_len }}个, 绑定<a href="{{ url_for('blog.add_wechat') }}">更多</a></p>
+        <ul>
+            {% for w in wechat_list %}
+                <li>app_id: {{ w.app_id }} 微信ID: {{ w.wechat_id }}</li>
+            {% endfor %}
+        </ul>
+
+
     {% else %}
         <p>点击<a href="{{ url_for('blog.register') }}">注册</a></p>
         <p>已有账号, 点击这里<a href="{{ url_for('blog.login') }}">登录</a></p>
