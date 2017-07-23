@@ -6,6 +6,8 @@ from flask.views import MethodView
 from my_app import db
 from tools import check_signature
 from my_app.models import Token
+import receive
+import reply
 
 
 wechat = Blueprint('wechat', __name__)
@@ -35,8 +37,28 @@ class MainView(MethodView):
         return u"数据库比对失败"
 
     def post(self):
-       pass
-
+        data = request.data
+        try:
+            msg = receive.parse_xml(data)
+            reply_msg = reply.TextMsg()
+            reply_msg.FromUserName = msg.ToUserName
+            reply_msg.ToUserName = msg.FromUserName
+            if isinstance(msg, receive.EventMsg):
+                if msg.Event == 'subscribe':
+                    reply_msg.Content = u'欢迎订阅'
+                else:
+                    reply_msg.Content = u'这是一条' + msg.Event + u'事件'
+            else:
+                reply_msg.Content = u'这是一条' + msg.MsgType + u'消息'
+            return reply_msg.send()
+        except Exception as e:
+            return 'success'
+        finally:
+            try:
+                msg.save()
+                reply_msg.save()
+            except Exception as e:
+                db.session.rollback()
 
 main_view = MainView.as_view('main_view')
 wechat.add_url_rule('/', view_func=main_view, methods=['GET', 'POST'])
