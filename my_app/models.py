@@ -42,7 +42,7 @@ class Token(db.Model):
     token = db.Column(db.String(256))
     access_token = db.Column(db.String(256))
     expired_time = db.Column(db.Integer)
-    account_id = db.Column(db.String(50), db.ForeignKey('account.id'))
+    account_id = db.Column(db.Integer, db.ForeignKey('account.id'))
     account = db.relationship('Account',
                             backref=db.backref('tokens', lazy='dynamic'))
 
