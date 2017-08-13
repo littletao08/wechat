@@ -7,6 +7,8 @@ from my_app.blog.forms import LoginForm, RegisterForm, AddWechatForm
 from my_app.models import Account, Token
 from my_app import db
 
+import my_app.main.tools as tools
+
 blog = Blueprint('blog', __name__)
 
 
@@ -136,3 +138,15 @@ def add_wechat():
         flash(form.errors, 'danger')
 
     return render_template('blog/add-wechat.html', form=form)
+
+@blog.route('/get-token/<app_id>', methods=['GET', 'POST'])
+@login_required
+def get_token(app_id):
+    """
+    用于测试获取access_token的视图, 
+    在正式完成后应该删除
+    """
+    app_id = app_id
+    t = Token.query.filter_by(app_id=app_id).first()
+    app_secret = t.app_secret
+    return tools.get_token(app_id, app_secret)
