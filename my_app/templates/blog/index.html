@@ -6,10 +6,13 @@
 {% block content %}
     {% if current_user.is_authenticated %}
         <h3>Hi, {{ current_user.name }}</h3>
-        <p>您已绑定的公众号: {{ wechat_len }}个, 绑定<a href="{{ url_for('blog.add_wechat') }}">更多</a></p>
+        <p>您已绑定的公众号: {{ wechat_len }}个, 绑定<a href="{{ url_for('blog.add_wechat') }}">更多</a>, <a href="{{ url_for('blog.logout') }}">注销</a></p>
         <ul>
             {% for w in wechat_list %}
-                <li>app_id: {{ w.app_id }} 微信ID: {{ w.wechat_id }}</li>
+                <li>
+                    app_id: {{ w.app_id }} 微信ID: {{ w.wechat_id }}
+                    <a href="{{ url_for('blog.get_token', app_id=w.app_id) }}">获取access_token</a>
+                </li>
             {% endfor %}
         </ul>
 
