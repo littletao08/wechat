@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from flask import request, Blueprint, render_template, redirect, flash, url_for
-from flask_login import current_user, login_user, login_required
+from flask_login import current_user, login_user, login_required, logout_user
 
 from my_app.blog.forms import LoginForm, RegisterForm, AddWechatForm
 from my_app.models import Account, Token
@@ -12,6 +12,9 @@ blog = Blueprint('blog', __name__)
 
 @blog.route('/')
 def index():
+    """
+    网站的主页视图, 显示已登录用户的绑定情况
+    """
     wechat_list = []
     if current_user.is_authenticated:
         wechat_list  = Account.query.filter_by(email=current_user.email).first_or_404().tokens.all()
@@ -85,11 +88,21 @@ def login():
         
     return render_template('blog/login.html', form=form)
 
+@blog.route('/logout')
+@login_required
+def logout():
+    """
+    登出视图
+    """
+    logout_user()
+    return redirect(url_for('blog.index'))
+
 @blog.route('/add-wechat', methods=['GET', 'POST'])
 @login_required
 def add_wechat():
     """
-    添加微信公众号视图
+    添加微信公众号视图, 绑定微信公众号
+    提供相应的公众号信息, 接入公众号
     """
     form = AddWechatForm(request.form)
     if form.validate_on_submit():
