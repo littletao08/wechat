@@ -41,9 +41,9 @@ class MainView(MethodView):
         return u"数据库比对失败"
 
     def post(self):
-    """
-    简单自动回复, 识别消息类型
-    """
+        """
+        简单自动回复, 识别消息类型
+        """
         data = request.data
         try:
             msg = receive.parse_xml(data)
