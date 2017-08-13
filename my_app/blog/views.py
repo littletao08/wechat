@@ -1,7 +1,11 @@
 # coding: utf-8
 
 from flask import request, Blueprint, render_template, redirect, flash, url_for
+from flask import current_app
 from flask_login import current_user, login_user, login_required, logout_user
+from werkzeug import secure_filename
+
+import requests
 
 from my_app.blog.forms import LoginForm, RegisterForm, AddWechatForm
 from my_app.models import Account, Token
@@ -146,7 +150,36 @@ def get_token(app_id):
     用于测试获取access_token的视图, 
     在正式完成后应该删除
     """
-    app_id = app_id
-    t = Token.query.filter_by(app_id=app_id).first()
-    app_secret = t.app_secret
-    return tools.get_token(app_id, app_secret)
+
+    return tools.get_token(app_id)
+
+@blog.route('/media/<app_id>', methods=['GET', 'POST'])
+def add_material(app_id):
+    if request.method == 'POST':
+        material_type = request.form.get('material_type')
+        material = request.files['material']
+
+        filename = secure_filename(material.filename)
+
+        token = tools.get_token(app_id)
+        data = {
+            'access_token': token,
+            'type': material_type
+        }
+        post_url = current_app.config['ADD_TEMP_MATERIAL_URL']
+        files = {'file': (filename, material.read())}
+
+        res = requests.post(post_url, files=files, data=data)
+
+        return res.text
+
+    return render_template('blog/media.html', app_id=app_id)
+
+
+def is_allowed(filename, file_type):
+    if file_type == 'image':
+        return '.' in filename and \
+               filename.lower().rsplit('.', 1)[1] in \
+               current_app.config['ALLOWED_IMAGE']
+    else:
+        return False
