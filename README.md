@@ -11,7 +11,47 @@
 > * 消息记录存储与分析
 > * 用户管理与分析
 
-## 一. 完成进度说明
+## 一. 部署及接入
+
+尝试过在BAE和pythonanywhere上接入, 由于BAE上的mysql数据库速度非常慢, 现在在pythonanywhere上进行接入测试, 并且pw上还可以打开console, 对于开发来说非常方便
+
+### BAE上部署
+
+留空, 需要在BAE上接入请自行摸索, 流程是相似的
+
+### pythonanywhere上部署
+
+- 首先, 在[pythonanywhere](https://www.pythonanywhere.com)上注册账号
+
+- 创建你的webapp, 在Working directory下运行git命令, 将github上的项目clone到pythonanywhere上
+
+  ```shell
+  git clone "https://github.com/oaim/wechat.git" wechat
+  ```
+
+- 配置运行环境, python2.7, 其他依赖环境可以通过根目录下requirement.txt文件安装
+
+- 在pythonanywhere上创建mysql数据库
+
+- 编辑WSGI configuration file, 添加相应的环境变量和配置程序入口:
+
+  ```python
+  import sys
+  import os
+
+  os.environ['FLASK_CONFIG'] = 'production'
+  os.environ['DATABASE_URI'] = 'mysql+mysqldb://username:password@username.mysql.pythonanywhere-services.com/username$dbname'
+
+  path = '/home/username/wechat'
+  if path not in sys.path:
+      sys.path.append(path)
+
+  from manager import app as application
+  ```
+
+现在应该可以应该可以运行了
+
+## 二. 完成进度说明
 
 - [x] 系统账号注册与公众号绑定 
 - [x] 多公众号接入
@@ -23,7 +63,8 @@
 - [ ] 网页前端渲染
 
 
-## 二. 部署及接入
+
+
 
 ## 三. 接收消息
 
