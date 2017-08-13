@@ -85,7 +85,7 @@ class Msg(db.Model):
     msg_type = db.Column(db.String(256))
     create_time = db.Column(db.Integer)
     content = db.Column(db.String(256))
-    media_id = db.Column(db.String(50), db.ForeignKey('media.media_id'))
+    media_id = db.Column(db.String(256), db.ForeignKey('media.media_id'))
     media = db.relationship('Media',
                             backref=db.backref('msgs', lazy='dynamic'))
     location_id = db.Column(db.Integer, db.ForeignKey('location.id'))
@@ -98,7 +98,7 @@ class Msg(db.Model):
 
 class Media(db.Model):
     """素材对象的数据模型"""
-    media_id = db.Column(db.String(50), primary_key=True)
+    media_id = db.Column(db.String(256), primary_key=True)
     thumb_media_id = db.Column(db.String(256))
     media_type = db.Column(db.String(256))
     voice_format = db.Column(db.String(256))
@@ -110,6 +110,9 @@ class Media(db.Model):
     locale_url = db.Column(db.String(256))
     tecent_url = db.Column(db.String(256))
     expired_time = db.Column(db.Integer)
+    app_id = db.Column(db.String(256), db.ForeignKey('token.app_id'))
+    app = db.relationship('Token',
+                          backref=db.backref('medias', lazy='dynamic'))
 
 
 class Event(db.Model):
