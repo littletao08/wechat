@@ -36,12 +36,13 @@ def get_fresh_token(app_id, app_secret):
     result = json.loads(res.read())
     return result
 
-def get_token(app_id, app_secret):
+def get_token(app_id):
     """尝试从本地获取token,如果过期则获取新的token并存入数据库"""
     at = Token.query.filter_by(app_id=app_id).first()
     current_time = int(time.time())
 
     if at.access_token is None or current_time > int(at.expired_time):
+        app_secret = at.app_secret
         result = get_fresh_token(app_id, app_secret)
         access_token = result['access_token']
         expires_in = result['expires_in']
