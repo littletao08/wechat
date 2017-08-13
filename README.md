@@ -40,7 +40,8 @@
   import os
 
   os.environ['FLASK_CONFIG'] = 'production'
-  os.environ['DATABASE_URI'] = 'mysql+mysqldb://username:password@username.mysql.pythonanywhere-services.com/username$dbname'
+  os.environ['DATABASE_URI'] = 'mysql+mysqldb://username:password \
+    @username.mysql.pythonanywhere-services.com/username$dbname'
 
   path = '/home/username/wechat'
   if path not in sys.path:
@@ -61,8 +62,6 @@
 - [ ] 主动回复消息
 - [ ] 消息存储
 - [ ] 网页前端渲染
-
-
 
 
 
