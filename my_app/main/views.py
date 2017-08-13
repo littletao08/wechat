@@ -13,7 +13,11 @@ import reply
 wechat = Blueprint('wechat', __name__)
 
 class MainView(MethodView):
-    """用于接入微信的视图类"""
+    """
+    用于接入微信的视图类
+    接入token是在绑定时候填写的
+    接入地址是http://xxx.xx/wechat/?app_id=app_id
+    """
     def get(self):
         app_id = request.args.get('app_id')
         signature = request.args.get('signature')
@@ -37,6 +41,9 @@ class MainView(MethodView):
         return u"数据库比对失败"
 
     def post(self):
+    """
+    简单自动回复, 识别消息类型
+    """
         data = request.data
         try:
             msg = receive.parse_xml(data)
