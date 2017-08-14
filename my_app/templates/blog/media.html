@@ -1,17 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>上传素材文件测试</title>
-</head>
-<body>
-    <form action="{{ url_for('blog.add_material', app_id=app_id) }}" method="POST" enctype="multipart/form-data">
-        <input type="file" name="material">
-        <select name="material_type">
-            <option vlaue='image'>image</option>
-            <option vlaue='voice'>voice</option>
-            <option vlaue='video'>video</option>
-        </select>
-        <input type="submit" name="submit" value="提交">
+{% extends 'blog/base.html' %}
+
+{% block title %}添加素材文件{% endblock %}
+
+{% block content %}
+    <form action="{{ url_for('blog.add_media', app_id=app_id) }}" method="POST" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        {{ form.media_file() }}
+        {{ form.media_type() }}
+        {{ form.submit() }}
     </form>
-</body>
-</html>
+{% endblock %}
