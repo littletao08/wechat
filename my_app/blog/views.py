@@ -1,5 +1,7 @@
 # coding: utf-8
 
+import os
+
 from flask import request, Blueprint, render_template, redirect, flash, url_for
 from flask import current_app
 from flask_login import current_user, login_user, login_required, logout_user
@@ -7,8 +9,8 @@ from werkzeug import secure_filename
 
 import requests
 
-from my_app.blog.forms import LoginForm, RegisterForm, AddWechatForm
-from my_app.models import Account, Token
+from my_app.blog.forms import LoginForm, RegisterForm, AddWechatForm, AddMediaForm
+from my_app.models import Account, Token, Media
 from my_app import db
 
 import my_app.main.tools as tools
@@ -154,26 +156,50 @@ def get_token(app_id):
     return tools.get_token(app_id)
 
 @blog.route('/media/<app_id>', methods=['GET', 'POST'])
-def add_material(app_id):
-    if request.method == 'POST':
-        material_type = request.form.get('material_type')
-        material = request.files['material']
+def add_media(app_id):
+    form = AddMediaForm(request.form)
+    if form.validate_on_submit():
+        media_type = request.form.get('media_type')
+        media_file = request.files['media_file']
 
-        filename = secure_filename(material.filename)
+        filename = secure_filename(media_file.filename)
+        save_path = os.path.join(
+            current_app.config['UPLOAD_FOLDER'], filename
+            ).replace('\\', '/')
 
         token = tools.get_token(app_id)
         data = {
             'access_token': token,
-            'type': material_type
+            'type': media_type
         }
         post_url = current_app.config['ADD_TEMP_MATERIAL_URL']
-        files = {'file': (filename, material.read())}
+        files = {'file': (filename, media_file.read())}
 
         res = requests.post(post_url, files=files, data=data)
 
+        r = res.json()
+        try:
+            m = Media(media_id=r['media_id'])
+            m.media_type = media_type
+            media_file.save(save_path)
+            m.locale_url = save_path
+            m.expired_time = int(r['created_at']) + 86400
+            t = Token.query.filter_by(app_id=app_id).first()
+            m.app = t
+            db.session.add(m)
+            db.session.commit()
+        except Exception as e:
+            print e
+        finally:
+            return res.text
+        
         return res.text
 
-    return render_template('blog/media.html', app_id=app_id)
+    if form.errors:
+        flash(form.errors, 'danger')
+
+
+    return render_template('blog/media.html', app_id=app_id, form=form)
 
 
 def is_allowed(filename, file_type):
