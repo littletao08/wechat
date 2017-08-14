@@ -1,7 +1,8 @@
 # coding: utf-8
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError
+from wtforms import StringField, PasswordField, \
+     BooleanField, SubmitField, FileField, SelectField, ValidationError
 from wtforms.validators import Required, Email, Length, EqualTo
 
 from my_app.models import Account
@@ -46,3 +47,12 @@ class AddWechatForm(FlaskForm):
     wechat_id = StringField(u'微信公众号', validators=[Required()])
     token = StringField(u'接入token', validators=[Required()])
     submit = SubmitField(u'添加')
+
+class AddMediaForm(FlaskForm):
+    """
+    添加素材表单
+    """
+    media_file = FileField(u'选择素材')
+    media_type = SelectField(u'选择文件类型',
+        choices=[('image', 'image'), ('voice', 'voice'), ('video', 'video')])
+    submit = SubmitField(u'提交')
