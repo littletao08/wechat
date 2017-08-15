@@ -4,9 +4,12 @@
 
 {% block content %}
     <form action="{{ url_for('blog.add_media', app_id=app_id) }}" method="POST" enctype="multipart/form-data">
-        {{ form.csrf_token }}
-        {{ form.media_file() }}
-        {{ form.media_type() }}
-        {{ form.submit() }}
+        <fieldset>
+            <legend>添加临时素材</legend>
+            {{ form.csrf_token }}
+            {{ form.media_file.label }} {{ form.media_file() }}
+            {{ form.media_type.label }} {{ form.media_type() }}
+            {{ form.submit() }}            
+        </fieldset>
     </form>
 {% endblock %}
