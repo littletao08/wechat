@@ -53,6 +53,6 @@ class AddMediaForm(FlaskForm):
     添加素材表单
     """
     media_file = FileField(u'选择素材')
-    media_type = SelectField(u'选择文件类型',
+    media_type = SelectField(u'选择素材类型',
         choices=[('image', 'image'), ('voice', 'voice'), ('video', 'video')])
     submit = SubmitField(u'提交')
