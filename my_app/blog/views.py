@@ -157,16 +157,25 @@ def get_token(app_id):
 
 @blog.route('/media/<app_id>', methods=['GET', 'POST'])
 def add_media(app_id):
+    """
+    用于添加临时素材的视图,
+    地址中传递相应的app_id用来给对应公众号添加素材
+    """
     form = AddMediaForm(request.form)
     if form.validate_on_submit():
         media_type = request.form.get('media_type')
         media_file = request.files['media_file']
 
+        # 获得文件名, 路径
         filename = secure_filename(media_file.filename)
         save_path = os.path.join(
             current_app.config['UPLOAD_FOLDER'], filename
             ).replace('\\', '/')
 
+        """ 
+        获取access_token, 使用requests库将文件上传到微信服务器,
+        同时将文件保留在本地服务器, 并把路径及返回信息保存在数据库
+        """
         token = tools.get_token(app_id)
         data = {
             'access_token': token,
@@ -174,11 +183,10 @@ def add_media(app_id):
         }
         post_url = current_app.config['ADD_TEMP_MATERIAL_URL']
         files = {'file': (filename, media_file.read())}
-
-        res = requests.post(post_url, files=files, data=data)
-
-        r = res.json()
+        
         try:
+            res = requests.post(post_url, files=files, data=data)
+            r = res.json()
             m = Media(media_id=r['media_id'])
             m.media_type = media_type
             media_file.save(save_path)
@@ -188,12 +196,14 @@ def add_media(app_id):
             m.app = t
             db.session.add(m)
             db.session.commit()
+        except KeyError as e:
+            flash(res.text, 'danger')
         except Exception as e:
-            print e
+            flash(str(e), 'danger')
+        else:
+            flash(unicode(filename) + u'上传成功', 'success')
         finally:
-            return res.text
-        
-        return res.text
+            return redirect(url_for('blog.add_media', app_id=app_id))
 
     if form.errors:
         flash(form.errors, 'danger')
