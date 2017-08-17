@@ -13,6 +13,7 @@
                     app_id: {{ w.app_id }} 微信ID: {{ w.wechat_id }}
                     <a href="{{ url_for('blog.get_token', app_id=w.app_id) }}">获取access_token</a>
                     <a href="{{ url_for('blog.add_media', app_id=w.app_id) }}">增加临时素材</a>
+                    <a href="{{ url_for('blog.show_media', app_id=w.app_id) }}">显示所有素材</a>
                 </li>
             {% endfor %}
         </ul>
