@@ -1,0 +1,36 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}所有素材{% endblock %}
+
+{% block content %}
+    <ul>
+        {% for m in image %}
+        <li>
+            <img src="{{ url_for('static', filename=m.locale_url) }}">
+        </li>
+        {% endfor %}
+
+        {% for m in voice %}
+        <li>
+           <audio controls="controls">
+               <source src="{{ url_for('static', filename=m.locale_url) }}" type="audio/mpeg">
+           </audio>
+        </li>
+        {% endfor %}
+
+        {% for m in video %}
+        <li>
+            <video width="320" height="240" controls="controls">
+                <source src="{{ url_for('static', filename=m.locale_url) }}" type="video/mp4" />
+            </video>
+        </li>
+        {% endfor %}
+
+        {% for m in thumb %}
+        <li>
+            <img src="{{ url_for('static', filename=m.locale_url) }}">
+        </li>
+        {% endfor %}
+
+    </ul>
+{% endblock %}
