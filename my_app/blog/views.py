@@ -187,11 +187,20 @@ def add_media(app_id):
         try:
             res = requests.post(post_url, files=files, data=data)
             r = res.json()
-            m = Media(media_id=r['media_id'])
+            m = Media()
+            media_id = ''
+            if media_type == 'thumb':
+                media_id = r['thumb_media_id']
+            else:
+                media_id = r['media_id']
+            m.media_id = media_id
             m.media_type = media_type
-            media_file.save(save_path)
-            m.locale_url = save_path
+            m.locale_url = 'uploads/'+filename
             m.expired_time = int(r['created_at']) + 86400
+
+            media_file.seek(0, 0)
+            media_file.save(save_path)
+
             t = Token.query.filter_by(app_id=app_id).first()
             m.app = t
             db.session.add(m)
@@ -219,3 +228,12 @@ def is_allowed(filename, file_type):
                current_app.config['ALLOWED_IMAGE']
     else:
         return False
+
+@blog.route('/show_media/<app_id>')
+def show_media(app_id):
+    image = Media.query.filter_by(app_id=app_id, media_type='image').all()
+    voice = Media.query.filter_by(app_id=app_id, media_type='voice').all()
+    video = Media.query.filter_by(app_id=app_id, media_type='video').all()
+    thumb = Media.query.filter_by(app_id=app_id, media_type='thumb').all()
+    return render_template('blog/show-media.html', image=image,
+        voice=voice, video=video, thumb=thumb)
