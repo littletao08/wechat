@@ -98,7 +98,8 @@ class Msg(db.Model):
 
 class Media(db.Model):
     """素材对象的数据模型"""
-    media_id = db.Column(db.String(256), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    media_id = db.Column(db.String(256))
     thumb_media_id = db.Column(db.String(256))
     media_type = db.Column(db.String(256))
     voice_format = db.Column(db.String(256))
