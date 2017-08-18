@@ -6,7 +6,7 @@
     <ul>
         {% for m in image %}
         <li>
-            <img src="{{ url_for('static', filename=m.locale_url) }}">
+            <img src="{{ url_for('static', filename=m.locale_url) }}" width="300" height="300">
         </li>
         {% endfor %}
 
@@ -20,7 +20,7 @@
 
         {% for m in video %}
         <li>
-            <video width="320" height="240" controls="controls">
+            <video width="300" height="300" controls="controls">
                 <source src="{{ url_for('static', filename=m.locale_url) }}" type="video/mp4" />
             </video>
         </li>
@@ -28,7 +28,7 @@
 
         {% for m in thumb %}
         <li>
-            <img src="{{ url_for('static', filename=m.locale_url) }}">
+            <img src="{{ url_for('static', filename=m.locale_url) }}" width="300" height="300">
         </li>
         {% endfor %}
 
