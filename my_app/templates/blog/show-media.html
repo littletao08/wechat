@@ -3,34 +3,105 @@
 {% block title %}所有素材{% endblock %}
 
 {% block content %}
-    <ul>
-        {% for m in image %}
-        <li>
-            <img src="{{ url_for('static', filename=m.locale_url) }}" width="300" height="300">
+    <h2>素材详情</h2>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a href="#image" class="nav-link active" id="image-tab" data-toggle="tab"
+             role="tab" aria-controls="image" aria-expanded="true">图片</a>
         </li>
-        {% endfor %}
-
-        {% for m in voice %}
-        <li>
-           <audio controls="controls">
-               <source src="{{ url_for('static', filename=m.locale_url) }}" type="audio/mpeg">
-           </audio>
+        <li class="nav-item">
+            <a href="#voice" class="nav-link" id="voice-tab" data-toggle="tab"
+             role="tab" aria-controls="voice" aria-expanded="true">语音</a>
         </li>
-        {% endfor %}
-
-        {% for m in video %}
-        <li>
-            <video width="300" height="300" controls="controls">
-                <source src="{{ url_for('static', filename=m.locale_url) }}" type="video/mp4" />
-            </video>
+        <li class="nav-item">
+            <a href="#video" class="nav-link" id="video-tab" data-toggle="tab"
+             role="tab" aria-controls="video" aria-expanded="true">视频</a>
         </li>
-        {% endfor %}
-
-        {% for m in thumb %}
-        <li>
-            <img src="{{ url_for('static', filename=m.locale_url) }}" width="300" height="300">
-        </li>
-        {% endfor %}
-
+        <li class="nav-item">
+            <a href="#thumb" class="nav-link" id="thumb-tab" data-toggle="tab"
+             role="tab" aria-controls="thumb" aria-expanded="true">缩略图</a>
+        </li>        
     </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="image" role="tabpanel" aria-labelledby="image-tab">
+            <ul class="list-unstyled">
+            {% for m in image %}
+            <li class="media">
+                <img class="d-flex mr-4" src="{{ url_for('static', filename=m.locale_url) }}"  width="300" height="300">
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">详情</h5>
+                    <p>media_id: {{ m.media_id }}</p>
+                    <p>过期时间:
+                        <script>
+                            var day = moment.unix("{{ m.expired_time }}");
+                            document.write(day.format("YYYY年MM月DD日 HH:mm:ss"));
+                        </script>
+                    </p>
+                </div>
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="voice" role="tabpanel" aria-labelledby="voice-tab">
+            <ul class="list-unstyled">
+            {% for m in voice %}
+            <li class="media">
+               <audio controls="controls" class="d-flex mr-3">
+                   <source src="{{ url_for('static', filename=m.locale_url) }}" type="audio/mpeg">
+               </audio>
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">详情</h5>
+                    <p>media_id: {{ m.media_id }}</p>
+                    <p>过期时间:
+                        <script>
+                            var day = moment.unix("{{ m.expired_time }}");
+                            document.write(day.format("YYYY年MM月DD日 HH:mm:ss"));
+                        </script>
+                    </p>
+                </div>
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">
+            <ul class="list-unstyled">
+            {% for m in video %}
+            <li class="media">
+                <video width="300" height="300" controls="controls" class="d-flex mr-3">
+                    <source src="{{ url_for('static', filename=m.locale_url) }}" type="video/mp4" />
+                </video>
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">详情</h5>
+                    <p>media_id: {{ m.media_id }}</p>
+                    <p>过期时间:
+                        <script>
+                            var day = moment.unix("{{ m.expired_time }}");
+                            document.write(day.format("YYYY年MM月DD日 HH:mm:ss"));
+                        </script>
+                    </p>
+                </div>
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="thumb" role="tabpanel" aria-labelledby="thumb-tab">
+            <ul class="list-unstyled">
+            {% for m in thumb %}
+            <li class="media">
+                <img class="d-flex mr-3" src="{{ url_for('static', filename=m.locale_url) }}" width="300" height="300">
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">详情</h5>
+                    <p>media_id: {{ m.media_id }}</p>
+                    <p>过期时间:
+                        <script>
+                            var day = moment.unix("{{ m.expired_time }}");
+                            document.write(day.format("YYYY年MM月DD日 HH:mm:ss"));
+                        </script>
+                    </p>
+                </div>
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}
