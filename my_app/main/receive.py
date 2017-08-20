@@ -247,7 +247,7 @@ class ViewEvent(EventMsg):
         super(ViewEvent, self).__init__(xmlData)
         self.EventKey = xmlData.find('EventKey').text
 
-    def function(self):
+    def save(self):
         msg = super(ViewEvent, self).save()
         e = models.Event()
         e.event_type = self.Event
