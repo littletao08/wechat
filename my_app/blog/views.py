@@ -196,7 +196,7 @@ def add_media(app_id):
             m.media_id = media_id
             m.media_type = media_type
             m.locale_url = 'uploads/'+filename
-            m.expired_time = int(r['created_at']) + 86400
+            m.expired_time = int(r['created_at']) + 259200
 
             media_file.seek(0, 0)
             media_file.save(save_path)
