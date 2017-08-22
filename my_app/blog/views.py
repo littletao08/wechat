@@ -2,18 +2,19 @@
 
 import os
 
-from flask import request, Blueprint, render_template, redirect, flash, url_for
-from flask import current_app
+from flask import request, Blueprint, render_template, redirect, flash, \
+    url_for, current_app
 from flask_login import current_user, login_user, login_required, logout_user
 from werkzeug import secure_filename
 
 import requests
 
-from my_app.blog.forms import LoginForm, RegisterForm, AddWechatForm, AddMediaForm
+from my_app.blog.forms import LoginForm, RegisterForm, AddWechatForm, \
+    AddMediaForm
 from my_app.models import Account, Token, Media
 from my_app import db
-
 import my_app.main.tools as tools
+
 
 blog = Blueprint('blog', __name__)
 
@@ -21,12 +22,16 @@ blog = Blueprint('blog', __name__)
 @blog.route('/')
 def index():
     """
+    
     网站的主页视图, 显示已登录用户的绑定情况
     """
     wechat_list = []
     if current_user.is_authenticated:
-        wechat_list  = Account.query.filter_by(email=current_user.email).first_or_404().tokens.all()
-    return render_template('blog/index.html', wechat_len=len(wechat_list), wechat_list=wechat_list)
+        wechat_list = Account.query.filter_by(
+            email=current_user.email).first_or_404().tokens.all()
+    return render_template('blog/index.html', wechat_len=len(wechat_list),
+                           wechat_list=wechat_list)
+
 
 @blog.route('/register', methods=['GET', 'POST'])
 def register():
@@ -51,7 +56,7 @@ def register():
             flash(
                 u'用户名或电子邮箱已存在, 请重新输入!',
                 'warning'
-                )
+            )
             return render_template('blog/register.html', form=form)
 
         account = Account()
@@ -67,6 +72,7 @@ def register():
         flash(form.errors, 'danger')
 
     return render_template('blog/register.html', form=form)
+
 
 @blog.route('/login', methods=['GET', 'POST'])
 def login():
@@ -93,17 +99,16 @@ def login():
 
     if form.errors:
         flash(form.errors, 'danger')
-        
+
     return render_template('blog/login.html', form=form)
+
 
 @blog.route('/logout')
 @login_required
 def logout():
-    """
-    登出视图
-    """
     logout_user()
     return redirect(url_for('blog.index'))
+
 
 @blog.route('/add-wechat', methods=['GET', 'POST'])
 @login_required
@@ -145,15 +150,17 @@ def add_wechat():
 
     return render_template('blog/add-wechat.html', form=form)
 
+
 @blog.route('/get-token/<app_id>', methods=['GET', 'POST'])
 @login_required
 def get_token(app_id):
     """
-    用于测试获取access_token的视图, 
+    用于测试获取access_token的视图,
     在正式完成后应该删除
     """
 
     return tools.get_token(app_id)
+
 
 @blog.route('/media/<app_id>', methods=['GET', 'POST'])
 def add_media(app_id):
@@ -170,9 +177,9 @@ def add_media(app_id):
         filename = secure_filename(media_file.filename)
         save_path = os.path.join(
             current_app.config['UPLOAD_FOLDER'], filename
-            ).replace('\\', '/')
+        ).replace('\\', '/')
 
-        """ 
+        """
         获取access_token, 使用requests库将文件上传到微信服务器,
         同时将文件保留在本地服务器, 并把路径及返回信息保存在数据库
         """
@@ -181,9 +188,9 @@ def add_media(app_id):
             'access_token': token,
             'type': media_type
         }
-        post_url = current_app.config['ADD_TEMP_MATERIAL_URL']
+        post_url = current_app.config['ADD_TEMP_MEDIA_URL']
         files = {'file': (filename, media_file.read())}
-        
+
         try:
             res = requests.post(post_url, files=files, data=data)
             r = res.json()
@@ -195,7 +202,7 @@ def add_media(app_id):
                 media_id = r['media_id']
             m.media_id = media_id
             m.media_type = media_type
-            m.locale_url = 'uploads/'+filename
+            m.locale_url = 'uploads/' + filename
             m.expired_time = int(r['created_at']) + 259200
 
             media_file.seek(0, 0)
@@ -217,7 +224,6 @@ def add_media(app_id):
     if form.errors:
         flash(form.errors, 'danger')
 
-
     return render_template('blog/media.html', app_id=app_id, form=form)
 
 
@@ -229,11 +235,34 @@ def is_allowed(filename, file_type):
     else:
         return False
 
+
 @blog.route('/show_media/<app_id>')
 def show_media(app_id):
     image = Media.query.filter_by(app_id=app_id, media_type='image').all()
     voice = Media.query.filter_by(app_id=app_id, media_type='voice').all()
     video = Media.query.filter_by(app_id=app_id, media_type='video').all()
     thumb = Media.query.filter_by(app_id=app_id, media_type='thumb').all()
-    return render_template('blog/show-media.html', image=image,
-        voice=voice, video=video, thumb=thumb)
+    return render_template('blog/show-media.html',
+                           image=image, voice=voice, video=video,
+                           thumb=thumb, app_id=app_id)
+
+
+@blog.route('/get_media/<app_id>')
+def get_media(app_id):
+    media_id = request.args.get('media_id')
+    access_token = tools.get_token(app_id)
+    params = {
+        'ACCESS_TOKEN': access_token,
+        'media_id': media_id
+    }
+
+    url = current_app.config['GET_TEMP_MEDIA_URL']
+
+    res = requests.get(url, params=params)
+    save_path = os.path.join(
+        current_app.config['UPLOAD_FOLDER'], 'test.jpg'
+    ).replace('\\', '/')
+    with open(save_path, 'wb') as fd:
+        fd.write(res.content)
+
+    return res.headers['Content-disposition']
