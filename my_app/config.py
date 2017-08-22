@@ -9,12 +9,13 @@ class Config(object):
     """关于配置参数的基类"""
     # 一个SECRET_KEY, 使一些需要加密的插件生效
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'my_secret_key'
-    WECHAT_TOKEN = os.environ.get('WECHAT_TOKEN') or 'syy'
     ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/cgi-bin/token'
-    ADD_TEMP_MATERIAL_URL = 'https://api.weixin.qq.com/cgi-bin/media/upload'
-    ADD_MATERIAL_URL = \
+    ADD_TEMP_MEDIA_URL = 'https://api.weixin.qq.com/cgi-bin/media/upload'
+    GET_TEMP_MEDIA_URL = "https://api.weixin.qq.com/cgi-bin/media/get"
+    GET_TEMP_VIDEO_URL = "http://api.weixin.qq.com/cgi-bin/media/get"
+    ADD_MEDIA_URL = \
         'https://api.weixin.qq.com/cgi-bin/material/add_material'
-    ADD_MATERIAL_NEWS_URL = \
+    ADD_MEDIA_NEWS_URL = \
         'https://api.weixin.qq.com/cgi-bin/material/add_news'
     # 文件上传配置
     UPLOAD_FOLDER = os.path.join(os.path.dirname(
