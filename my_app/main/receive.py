@@ -80,7 +80,7 @@ class Msg(object):
         self.CreateTime = xmlData.find('CreateTime').text
         self.MsgType = xmlData.find('MsgType').text
         msg_id = xmlData.find('MsgId')
-        self.MsgId = msg_id.text if msg_id else ''
+        self.MsgId = msg_id.text if msg_id is not None else ''
 
     def save(self):
         """保存消息方法
