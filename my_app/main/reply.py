@@ -241,32 +241,35 @@ class Music(object):
         self.ThumbMediaId = ThumbMediaId
 
 
-class ArticleMsg(Msg):
+class NewsMsg(Msg):
     """图文消息
 
-    图文消息是最为复杂的回复消息类型
+    图文消息是最为复杂的回复消息类型, 多条图文组成的消息
 
     Attributes:
-        ArticleCount (TYPE): Description
-        Articles (TYPE): Description
-        MsgType (str): Description
+        ArticleCount (int): 图文消息个数, 限制为8条内
+        Articles (list): 图文消息列表
+        MsgType (str): 图文消息类型, 默认为news
     """
 
-    def __init__(self, Articles=None, **kwarg):
-        super(ArticleMsg, self).__init__(**kwarg)
-        self.ArticleCount = str(len(Articles))
+    def __init__(self, Articles=[], **kwarg):
+        super(NewsMsg, self).__init__(**kwarg)
+        self.ArticleCount = len(Articles)
         self.Articles = Articles
-        self.MsgType = 'article'
+        self.MsgType = 'news'
 
 
 class item(object):
     """图文消息条目
 
+    每条图文消息为一个图片, 描述, 标题, 点击会跳转到详情页面
+        默认第一条item显示为大图
+
     Attributes:
-        Description (TYPE): Description
-        PicUrl (TYPE): Description
-        Title (TYPE): Description
-        Url (TYPE): Description
+        Description (str): 图文消息描述
+        PicUrl (str): 图片链接, 支持png, jpg, 大图360*200, 小图200*200
+        Title (str): 图文消息标题
+        Url (str): 点击图文消息跳转链接
     """
 
     def __init__(self, Title=None, Description=None, PicUrl=None, Url=None):
@@ -277,14 +280,16 @@ class item(object):
 
 
 def to_element(obj, root='xml'):
-    """将各消息类转化成ElementTree包下的Emlement
+    """消息格式转换函数
+
+    将相应的回复消息类转换成Element对象
 
     Args:
-        obj (TYPE): Description
-        root (str, optional): Description
+        obj (msg): 具体的回复消息类
+        root (str, optional): 可选的参数, 默认转换成的根元素为xml
 
     Returns:
-        TYPE: Description
+        te.Element: 返回Element对象
     """
     e = et.Element(root)
     for k in obj.__dict__:
