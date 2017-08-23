@@ -7,7 +7,7 @@
 
 import xml.etree.ElementTree as ET
 
-import my_app.models as models
+from .. import models
 
 
 def parse_xml(data):
@@ -159,7 +159,7 @@ class VoiceMsg(Msg):
         self.MediaId = xmlData.find('MediaId').text
         self.Format = xmlData.find('Format').text
         recognition = xmlData.find('Recognition')
-        self.Recognition = recognition.text if recognition else ''
+        self.Recognition = recognition.text if recognition is not None else ''
 
     def save(self):
         msg = super(VoiceMsg, self).save()
