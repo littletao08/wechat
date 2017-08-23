@@ -165,7 +165,7 @@ class VideoMsg(Msg):
     def __init__(self, Video=None, **kwarg):
         super(VideoMsg, self).__init__(**kwarg)
         self.Video = Video
-        self.MsgType = 'Video'
+        self.MsgType = 'video'
 
     def save(self):
         msg = super(VideoMsg, self).save()
