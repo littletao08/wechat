@@ -76,7 +76,7 @@ class MainView(MethodView):
                 reply_msg = reply.VoiceMsg()
                 voice = reply.Voice(msg.MediaId)
                 reply_msg.Voice = voice
-            elif msg.MsgType == 'video':
+            elif msg.MsgType == 'video' or 'shortvideo':
                 reply_msg = reply.VideoMsg()
                 video = reply.Video()
                 video.MediaId = msg.MediaId
@@ -93,7 +93,9 @@ class MainView(MethodView):
         except Exception as e:
             print str(e)
         finally:
-            reply_msg.save()
+            m = reply_msg.save()
+            db.session.add(m)
+            db.session.commit()
 
 
 main_view = MainView.as_view('main_view')
