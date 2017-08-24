@@ -53,6 +53,7 @@ class MainView(MethodView):
             返回回复消息字符串, 微信公众平台文档中规定的精简版xml字符串消息
         """
         data = request.data
+        print data
         msg = receive.parse_xml(data)
         try:
             m = msg.save()
@@ -88,6 +89,7 @@ class MainView(MethodView):
         reply_msg.FromUserName = msg.ToUserName
         reply_msg.ToUserName = msg.FromUserName
 
+        print reply_msg.send()
         try:
             return reply_msg.send()
         except Exception as e:
