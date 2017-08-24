@@ -76,7 +76,7 @@ class MainView(MethodView):
                 reply_msg = reply.VoiceMsg()
                 voice = reply.Voice(msg.MediaId)
                 reply_msg.Voice = voice
-            elif msg.MsgType == 'video' or msg.MsgType == 'shortvideo':
+            elif msg.MsgType == 'video':
                 reply_msg = reply.VideoMsg()
                 video = reply.Video()
                 video.MediaId = msg.MediaId
