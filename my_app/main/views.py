@@ -80,7 +80,7 @@ class MainView(MethodView):
             elif msg.MsgType == 'video':
                 reply_msg = reply.VideoMsg()
                 video = reply.Video()
-                video.MediaId = msg.MediaId
+                video.MediaId = 'mjODPU0ItW1MnBrZb6-IDEgk6-DfE7HMW0M2L7J_UGvDL1OJJ2QAp8CGUHMySuYx'
                 video.Title = 'test'
                 video.Description = 'just test'
                 reply_msg.Video = video
