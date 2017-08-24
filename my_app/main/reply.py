@@ -294,9 +294,10 @@ def to_element(obj, root='xml'):
     e = et.Element(root)
     for k in obj.__dict__:
         if isinstance(getattr(obj, k), (str, unicode, int)):
-            sub_e = et.Element(k)
-            sub_e.text = getattr(obj, k)
-            e.append(sub_e)
+            if getattr(obj, k) != '':
+                sub_e = et.Element(k)
+                sub_e.text = getattr(obj, k)
+                e.append(sub_e)
         elif isinstance(getattr(obj, k), type([])):
             e_l = et.Element(k)
             list_obj = getattr(obj, k)
