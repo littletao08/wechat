@@ -186,7 +186,7 @@ class Video(object):
         Title (str): 视频标题, 非必须项
     """
 
-    def __init__(self, MediaId=None, Title=None, Description=None):
+    def __init__(self, MediaId=None, Title='', Description=''):
         self.MediaId = MediaId
         self.Title = Title
         self.Description = Description
