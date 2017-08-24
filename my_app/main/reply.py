@@ -97,8 +97,8 @@ class ImageMsg(Msg):
 
     def save(self):
         msg = super(ImageMsg, self).save()
-        media_id = self.Image.MediaId
-        media = models.Media.query.filter_by(media_id=media_id).first()
+        media = models.Media()
+        media.media_id = self.Image.MediaId
         msg.media = media
         return msg
 
@@ -133,8 +133,8 @@ class VoiceMsg(Msg):
 
     def save(self):
         msg = super(VoiceMsg, self).save()
-        media_id = self.Voice.MediaId
-        media = models.Media.query.filter_by(media_id=media_id).first()
+        media = models.Media()
+        media.media_id = self.Voice.MediaId
         msg.media = media
         return msg
 
@@ -169,8 +169,10 @@ class VideoMsg(Msg):
 
     def save(self):
         msg = super(VideoMsg, self).save()
-        media_id = self.Video.MediaId
-        media = models.Media.query.filter_by(media_id=media_id).first()
+        media = models.Media()
+        media.media_id = self.Video.MediaId
+        media.title = self.Video.Title
+        media.description = self.Video.Description
         msg.media = media
         return msg
 
