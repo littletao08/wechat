@@ -55,6 +55,7 @@ class Msg(object):
         msg.to_username = self.ToUserName
         msg.from_username = self.FromUserName
         msg.create_time = self.CreateTime
+        msg.msg_type = self.MsgType
         return msg
 
 
@@ -76,7 +77,6 @@ class TextMsg(Msg):
     def save(self):
         msg = super(TextMsg, self).save()
         msg.content = self.Content
-        msg.msg_type = self.MsgType
         return msg
 
 
