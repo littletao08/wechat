@@ -80,6 +80,8 @@ class MainView(MethodView):
                 reply_msg = reply.VideoMsg()
                 video = reply.Video()
                 video.MediaId = msg.MediaId
+                video.Title = 'test'
+                video.Description = 'just test'
                 reply_msg.Video = video
             else:
                 reply_msg.Content = u'这是一条' + msg.MsgType + u'消息'
