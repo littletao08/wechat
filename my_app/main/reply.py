@@ -184,7 +184,7 @@ class Video(object):
 
     Attributes:
         Description (str): 视频描述, 非必须项
-        MediaId (str): 视频媒体id
+        MediaId (str): 视频媒体id, 必须公众号上传的
         Title (str): 视频标题, 非必须项
     """
 
