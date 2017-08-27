@@ -5,6 +5,7 @@
 包含各类微信消息时间的模块, 并有解析消息函数, 每个消息类有保存方法
 """
 
+import time
 import xml.etree.ElementTree as ET
 
 from .. import models
@@ -136,8 +137,10 @@ class ImageMsg(Msg):
     def save(self):
         msg = super(ImageMsg, self).save()
         media = models.Media()
+        media.media_type = 'image'
+        media.created_at = int(time.time())
         media.media_id = self.MediaId
-        media.tecent_url = self.PicUrl
+        media.pic_url = self.PicUrl
         msg.media = media
         return msg
 
@@ -164,6 +167,8 @@ class VoiceMsg(Msg):
     def save(self):
         msg = super(VoiceMsg, self).save()
         media = models.Media()
+        media.media_type = 'voice'
+        media.created_at = int(time.time())
         media.media_id = self.MediaId
         media.voice_format = self.Format
         media.voice_recognition = self.Recognition
@@ -190,6 +195,8 @@ class VideoMsg(Msg):
     def save(self):
         msg = super(VideoMsg, self).save()
         media = models.Media()
+        media.media_type = 'video'
+        media.created_at = int(time.time())
         media.media_id = self.MediaId
         media.thumb_media_id = self.ThumbMediaId
         msg.media = media
@@ -248,7 +255,9 @@ class LinkMsg(Msg):
     def save(self):
         msg = super(LinkMsg, self).save()
         m = models.Media()
-        m.media_id = self.Url
+        m.media_type = 'link'
+        m.created_at = int(time.time())
+        m.url = self.Url
         m.title = self.Title
         m.Description = self.Description
         m.tecent_url = self.Url
