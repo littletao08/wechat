@@ -1,7 +1,11 @@
 # coding: utf-8
 
+import datetime as dt
+
 from flask import Blueprint, request
 from flask.views import MethodView
+
+import requests
 
 from tools import check_signature
 from my_app.models import Token
@@ -66,6 +70,45 @@ class MainView(MethodView):
         if isinstance(msg, receive.EventMsg):
             if msg.Event == 'subscribe':
                 reply_msg.Content = u'欢迎订阅'
+            elif msg.Event == 'CLICK':
+                if msg.EventKey == 'news':
+                    item = reply.item()
+                    item.Title = u'系统安装配置'
+                    item.Description = u'系统安装与配置, windows, linux'
+                    item.PicUrl = u'https://img3.doubanio.com/' \
+                        'view/photo/l/public/p2497391244.webp'
+                    item.Url = u'http://wangmiao.site/2017/07/29/' \
+                        '%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE/'
+
+                    articles = [item]
+                    reply_msg = reply.NewsMsg(articles)
+                if msg.EventKey == 'news3':
+                    articles = []
+                    today = dt.date.today().toordinal()
+                    for i in range(3):
+                        params = {
+                            'date': dt.date.fromordinal(today - i).isoformat()
+                        }
+                        res = requests.get('http://open.iciba.com/dsapi/',
+                                           params=params)
+                        res = res.json()
+
+                        item = reply.item()
+                        item.Title = res['caption'] + res['dateline']
+                        item.Description = res['content']
+                        item.PicUrl = res['picture']
+                        item.Url = 'http://news.iciba.com/views/dailysentence/daily.html#!/detail/title/' + res['dateline']
+                        articles.append(item)
+                    reply_msg = reply.NewsMsg(articles)
+                if msg.EventKey == 'music':
+                    music = reply.Music()
+                    music.Title = u'Nothing on you'
+                    music.Description = 'Beautiful girls all over the world' \
+                        '\nI could be chasing but my time would be wasted'
+                    music.MusicUrl = 'http://music.163.com/outchain/player?type=2&id=227707'
+                    music.HQMusicUrl = 'http://music.163.com/outchain/player?type=2&id=227707'
+                    reply_msg = reply.MusicMsg()
+                    reply_msg.Music = music
             else:
                 reply_msg.Content = u'这是一条' + msg.Event + u'事件'
         else:
