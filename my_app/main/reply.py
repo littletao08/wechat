@@ -220,7 +220,7 @@ class MusicMsg(Msg):
         m = models.Media()
         m.media_type = 'music'
         m.created_at = int(time.time())
-        m.media_id = self.Music.ThumbMediaId
+        m.thumb_media_id = self.Music.ThumbMediaId
         m.title = self.Music.Title
         m.description = self.Music.Description
         m.music_url = self.Music.MusicUrl
@@ -242,8 +242,8 @@ class Music(object):
         Title (str): 音乐消息标题, 非必须项
     """
 
-    def __init__(self, Title=None, Description=None,
-                 MusicUrl=None, HQMusicUrl=None, ThumbMediaId=None):
+    def __init__(self, Title='', Description='',
+                 MusicUrl='', HQMusicUrl='', ThumbMediaId=''):
         self.Title = Title
         self.Description = Description
         self.MusicUrl = MusicUrl
