@@ -98,6 +98,8 @@ class ImageMsg(Msg):
     def save(self):
         msg = super(ImageMsg, self).save()
         media = models.Media()
+        media.media_type = 'image'
+        media.created_at = int(time.time())
         media.media_id = self.Image.MediaId
         msg.media = media
         return msg
@@ -134,6 +136,8 @@ class VoiceMsg(Msg):
     def save(self):
         msg = super(VoiceMsg, self).save()
         media = models.Media()
+        media.media_type = 'voice'
+        media.created_at = int(time.time())
         media.media_id = self.Voice.MediaId
         msg.media = media
         return msg
@@ -170,6 +174,8 @@ class VideoMsg(Msg):
     def save(self):
         msg = super(VideoMsg, self).save()
         media = models.Media()
+        media.media_type = 'video'
+        media.created_at = int(time.time())
         media.media_id = self.Video.MediaId
         media.title = self.Video.Title
         media.description = self.Video.Description
@@ -212,6 +218,8 @@ class MusicMsg(Msg):
     def save(self):
         msg = super(MusicMsg, self).save()
         m = models.Media()
+        m.media_type = 'music'
+        m.created_at = int(time.time())
         m.media_id = self.Music.ThumbMediaId
         m.title = self.Music.Title
         m.description = self.Music.Description
@@ -260,6 +268,24 @@ class NewsMsg(Msg):
         self.Articles = Articles
         self.MsgType = 'news'
 
+    def save(self):
+        msg = super(NewsMsg, self).save()
+
+        m = models.Media()
+        m.article_count = self.ArticleCount
+        m.media_type = 'news'
+        m.created_at = int(time.time())
+        for i in self.Articles:
+            item = models.Item()
+            item.title = i.Title
+            item.description = i.Description
+            item.pic_url = i.PicUrl
+            item.url = i.Url
+            item.article = m
+
+        msg.media = m
+        return msg
+
 
 class item(object):
     """图文消息条目
@@ -298,7 +324,7 @@ def to_element(obj, root='xml'):
         if isinstance(getattr(obj, k), (str, unicode, int)):
             if getattr(obj, k) != '':
                 sub_e = et.Element(k)
-                sub_e.text = getattr(obj, k)
+                sub_e.text = unicode(getattr(obj, k))
                 e.append(sub_e)
         elif isinstance(getattr(obj, k), type([])):
             e_l = et.Element(k)
