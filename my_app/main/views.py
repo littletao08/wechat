@@ -71,7 +71,7 @@ class MainView(MethodView):
             if msg.Event == 'subscribe':
                 reply_msg.Content = u'欢迎订阅'
             elif msg.Event == 'CLICK':
-                if msg.EventKey == 'news':
+                if msg.EventKey == 'news1':
                     item = reply.item()
                     item.Title = u'系统安装配置'
                     item.Description = u'系统安装与配置, windows, linux'
@@ -91,6 +91,8 @@ class MainView(MethodView):
                         }
                         res = requests.get('http://open.iciba.com/dsapi/',
                                            params=params)
+
+                        print res.text
                         res = res.json()
 
                         item = reply.item()
