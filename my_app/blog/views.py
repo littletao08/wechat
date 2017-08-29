@@ -22,7 +22,6 @@ blog = Blueprint('blog', __name__)
 @blog.route('/')
 def index():
     """
-    
     网站的主页视图, 显示已登录用户的绑定情况
     """
     wechat_list = []
@@ -173,51 +172,15 @@ def add_media(app_id):
         media_type = request.form.get('media_type')
         media_file = request.files['media_file']
 
-        # 获得文件名, 路径
-        filename = secure_filename(media_file.filename)
-        save_path = os.path.join(
-            current_app.config['UPLOAD_FOLDER'], filename
-        ).replace('\\', '/')
-
-        """
-        获取access_token, 使用requests库将文件上传到微信服务器,
-        同时将文件保留在本地服务器, 并把路径及返回信息保存在数据库
-        """
-        token = tools.get_token(app_id)
-        data = {
-            'access_token': token,
-            'type': media_type
-        }
-        post_url = current_app.config['ADD_TEMP_MEDIA_URL']
-        files = {'file': (filename, media_file.read())}
-
         try:
-            res = requests.post(post_url, files=files, data=data)
-            r = res.json()
-            m = Media()
-            media_id = ''
-            if media_type == 'thumb':
-                media_id = r['thumb_media_id']
-            else:
-                media_id = r['media_id']
-            m.media_id = media_id
-            m.media_type = media_type
-            m.locale_url = 'uploads/' + filename
-            m.expired_time = int(r['created_at']) + 259200
-
-            media_file.seek(0, 0)
-            media_file.save(save_path)
-
-            t = Token.query.filter_by(app_id=app_id).first()
-            m.app = t
-            db.session.add(m)
-            db.session.commit()
+            res = tools.upload_media(app_id, media_file, media_type)
         except KeyError as e:
+            print 'keyerror'
             flash(res.text, 'danger')
         except Exception as e:
             flash(str(e), 'danger')
         else:
-            flash(unicode(filename) + u'上传成功', 'success')
+            flash(unicode(media_file.filename) + u'上传成功', 'success')
         finally:
             return redirect(url_for('blog.add_media', app_id=app_id))
 
@@ -250,19 +213,5 @@ def show_media(app_id):
 @blog.route('/get_media/<app_id>')
 def get_media(app_id):
     media_id = request.args.get('media_id')
-    access_token = tools.get_token(app_id)
-    params = {
-        'ACCESS_TOKEN': access_token,
-        'media_id': media_id
-    }
-
-    url = current_app.config['GET_TEMP_MEDIA_URL']
-
-    res = requests.get(url, params=params)
-    save_path = os.path.join(
-        current_app.config['UPLOAD_FOLDER'], 'test.jpg'
-    ).replace('\\', '/')
-    with open(save_path, 'wb') as fd:
-        fd.write(res.content)
-
-    return res.headers['Content-disposition']
+    response = tools.download_media(app_id, media_id)
+    return response
