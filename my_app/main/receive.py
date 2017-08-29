@@ -137,7 +137,7 @@ class ImageMsg(Msg):
     def save(self):
         msg = super(ImageMsg, self).save()
         media = models.Media()
-        t = models.Token.query.filter_by(wechat_id=self.ToUserName)
+        t = models.Token.query.filter_by(wechat_id=self.ToUserName).first()
         media.app = t
         media.locale_url = ''
         media.media_type = 'image'
@@ -170,7 +170,7 @@ class VoiceMsg(Msg):
     def save(self):
         msg = super(VoiceMsg, self).save()
         media = models.Media()
-        t = models.Token.query.filter_by(wechat_id=self.ToUserName)
+        t = models.Token.query.filter_by(wechat_id=self.ToUserName).first()
         media.app = t
         media.locale_url = ''
         media.media_type = 'voice'
@@ -201,7 +201,7 @@ class VideoMsg(Msg):
     def save(self):
         msg = super(VideoMsg, self).save()
         media = models.Media()
-        t = models.Token.query.filter_by(wechat_id=self.ToUserName)
+        t = models.Token.query.filter_by(wechat_id=self.ToUserName).first()
         media.app = t
         media.locale_url = ''
         media.media_type = 'video'
@@ -264,7 +264,7 @@ class LinkMsg(Msg):
     def save(self):
         msg = super(LinkMsg, self).save()
         media = models.Media()
-        t = models.Token.query.filter_by(wechat_id=self.ToUserName)
+        t = models.Token.query.filter_by(wechat_id=self.ToUserName).first()
         media.app = t
         media.locale_url = ''
         media.media_type = 'link'
