@@ -137,6 +137,9 @@ class ImageMsg(Msg):
     def save(self):
         msg = super(ImageMsg, self).save()
         media = models.Media()
+        t = models.Token.query.filter_by(wechat_id=self.ToUserName)
+        media.app = t
+        media.locale_url = ''
         media.media_type = 'image'
         media.created_at = int(time.time())
         media.media_id = self.MediaId
@@ -167,6 +170,9 @@ class VoiceMsg(Msg):
     def save(self):
         msg = super(VoiceMsg, self).save()
         media = models.Media()
+        t = models.Token.query.filter_by(wechat_id=self.ToUserName)
+        media.app = t
+        media.locale_url = ''
         media.media_type = 'voice'
         media.created_at = int(time.time())
         media.media_id = self.MediaId
@@ -195,6 +201,9 @@ class VideoMsg(Msg):
     def save(self):
         msg = super(VideoMsg, self).save()
         media = models.Media()
+        t = models.Token.query.filter_by(wechat_id=self.ToUserName)
+        media.app = t
+        media.locale_url = ''
         media.media_type = 'video'
         media.created_at = int(time.time())
         media.media_id = self.MediaId
@@ -254,14 +263,17 @@ class LinkMsg(Msg):
 
     def save(self):
         msg = super(LinkMsg, self).save()
-        m = models.Media()
-        m.media_type = 'link'
-        m.created_at = int(time.time())
-        m.url = self.Url
-        m.title = self.Title
-        m.Description = self.Description
-        m.tecent_url = self.Url
-        msg.media = m
+        media = models.Media()
+        t = models.Token.query.filter_by(wechat_id=self.ToUserName)
+        media.app = t
+        media.locale_url = ''
+        media.media_type = 'link'
+        media.created_at = int(time.time())
+        media.url = self.Url
+        media.title = self.Title
+        media.Description = self.Description
+        media.tecent_url = self.Url
+        msg.media = media
         return msg
 
 
