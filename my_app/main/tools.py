@@ -5,10 +5,13 @@ import urllib
 import urllib2
 import json
 import time
+import os
 
-from flask import current_app
+from flask import current_app, make_response, send_file
 
-from my_app.models import Token
+import requests
+
+from my_app.models import Token, Media
 from my_app import db
 
 
@@ -90,3 +93,88 @@ def get_token(app_id):
         return access_token
     else:
         return at.access_token
+
+
+def upload_media(app_id, files, media_type):
+    """上传临时素材函数
+
+    Args:
+        app_id (str): 微信公众号app_id
+        files (file-like): 需要上传的类文件对象
+        media_type (str): 临时素材的类型, image, voice, video, thumb
+
+    Returns:
+        response: Requests库返回的响应对象
+    """
+    token = get_token(app_id)
+    data = {
+        'access_token': token,
+        'type': media_type
+    }
+
+    media_file = {
+        'files': (files.filename, files.read())
+    }
+    url = current_app.config['ADD_MEDIA_URL']
+    res = requests.post(url, files=media_file, data=data)
+    r = res.json()
+
+    media_id = ''
+    if media_type == 'thumb':
+        media_id = r['thumb_media_id']
+    else:
+        media_id = r['media_id']
+    created_at = r['created_at']
+
+    filename = media_id + os.path.splitext(files.filename)[1]
+    save_path = os.path.join(
+        current_app.config['UPLOAD_FOLDER'], filename
+    ).replace('\\', '/')
+    files.seek(0, 0)
+    files.save(save_path)
+
+    t = Token.query.filter_by(app_id=app_id).first()
+
+    media = Media()
+    media.media_id = media_id
+    media.media_type = media_type
+    media.created_at = int(created_at)
+    media.locale_url = 'uploads/' + filename
+    media.app = t
+
+    db.session.add(media)
+    db.session.commit()
+
+    return res
+
+
+def download_media(app_id, media_id):
+    token = get_token(app_id)
+    m = Media.query.filter_by(media_id=media_id).first()
+
+    url = current_app.config['GET_MEDIA_URL']
+    params = {
+        'access_token': token,
+        'media_id': media_id
+    }
+
+    res = requests.get(url, params=params)
+
+    filename = res.headers.get('Content-disposition').split('"')[1]
+
+    save_path = os.path.join(
+        current_app.config['UPLOAD_FOLDER'], filename)
+
+    if not os.path.exists(save_path):
+        with open(save_path, 'wb+') as f:
+            f.write(res.content)
+
+    m.locale_url = 'uploads/' + filename
+
+    db.session.add(m)
+    db.session.commit()
+
+    response = make_response(send_file(save_path))
+    response.headers['Content-disposition'] = res.headers.get('Content-disposition')
+
+    return response
