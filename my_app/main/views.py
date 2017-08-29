@@ -104,7 +104,7 @@ class MainView(MethodView):
                     reply_msg = reply.NewsMsg(articles)
                 if msg.EventKey == 'music':
                     music = reply.Music()
-                    music.ThumbMediaId = 'csPtyTCLM3sD5bzIZ6IzXbstkJwh2DnjbfkZUIzPFw-GEDzbMmHNupoIQPR3JTwd'
+                    music.ThumbMediaId = 'bbikvFfKwQ103-l10oTfnS_vRqTjks7F_X72fwoAeMndj41d86vBOrx2nTnMDz3V'
                     music.Title = 'Nothing on you'
                     music.Description = 'Beautiful girls all over the world'
                     music.MusicUrl = 'http://music.163.com/outchain/player?type=2&id=227707'
