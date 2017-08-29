@@ -33,10 +33,11 @@
                     <p>media_id: {{ m.media_id }}</p>
                     <p>过期时间:
                         <script>
-                            var day = moment.unix("{{ m.expired_time }}");
+                            var day = moment.unix("{{ m.created_at + 259200 }}");
                             document.write(day.format("YYYY年MM月DD日 HH:mm:ss"));
                         </script>
                     </p>
+                    <p><a href="{{ url_for('blog.get_media', app_id=app_id, media_id=m.media_id )}}">下载</a></p>
                 </div>
             </li>
             {% endfor %}
@@ -54,10 +55,11 @@
                     <p>media_id: {{ m.media_id }}</p>
                     <p>过期时间:
                         <script>
-                            var day = moment.unix("{{ m.expired_time }}");
+                            var day = moment.unix("{{ m.created_at + 259200 }}");
                             document.write(day.format("YYYY年MM月DD日 HH:mm:ss"));
                         </script>
                     </p>
+                    <p><a href="{{ url_for('blog.get_media', app_id=app_id, media_id=m.media_id )}}">下载</a></p>
                 </div>
             </li>
             {% endfor %}
@@ -75,10 +77,11 @@
                     <p>media_id: {{ m.media_id }}</p>
                     <p>过期时间:
                         <script>
-                            var day = moment.unix("{{ m.expired_time }}");
+                            var day = moment.unix("{{ m.created_at + 259200 }}");
                             document.write(day.format("YYYY年MM月DD日 HH:mm:ss"));
                         </script>
                     </p>
+                    <p><a href="{{ url_for('blog.get_media', app_id=app_id, media_id=m.media_id )}}">下载</a></p>
                 </div>
             </li>
             {% endfor %}
@@ -94,10 +97,11 @@
                     <p>media_id: {{ m.media_id }}</p>
                     <p>过期时间:
                         <script>
-                            var day = moment.unix("{{ m.expired_time }}");
+                            var day = moment.unix("{{ m.created_at + 259200 }}");
                             document.write(day.format("YYYY年MM月DD日 HH:mm:ss"));
                         </script>
                     </p>
+                    <p><a href="{{ url_for('blog.get_media', app_id=app_id, media_id=m.media_id )}}">下载</a></p>
                 </div>
             </li>
             {% endfor %}
