@@ -9,14 +9,39 @@ class Config(object):
     """关于配置参数的基类"""
     # 一个SECRET_KEY, 使一些需要加密的插件生效
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'my_secret_key'
+    # 获取access_token地址
     ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/cgi-bin/token'
-    ADD_TEMP_MEDIA_URL = 'https://api.weixin.qq.com/cgi-bin/media/upload'
-    GET_TEMP_MEDIA_URL = "https://api.weixin.qq.com/cgi-bin/media/get"
-    GET_TEMP_VIDEO_URL = "http://api.weixin.qq.com/cgi-bin/media/get"
-    ADD_MEDIA_URL = \
+
+    # 临时素材地址
+    ADD_MEDIA_URL = 'https://api.weixin.qq.com/cgi-bin/media/upload'
+    GET_MEDIA_URL = "https://api.weixin.qq.com/cgi-bin/media/get"
+    GET_VIDEO_URL = "http://api.weixin.qq.com/cgi-bin/media/get"
+
+    # 永久素材地址
+    ADD_MATERIAL_URL = \
         'https://api.weixin.qq.com/cgi-bin/material/add_material'
-    ADD_MEDIA_NEWS_URL = \
+    GET_MATERIAL_URL = \
+        'https://api.weixin.qq.com/cgi-bin/material/get_material'
+    DEL_MATERIAL_URL = \
+        'https://api.weixin.qq.com/cgi-bin/material/del_material'
+    GET_MATERIALCOUNT_URL = \
+        'https://api.weixin.qq.com/cgi-bin/material/get_materialcount'
+    BATCHGET_MATERIAL_URL = \
+        'https://api.weixin.qq.com/cgi-bin/material/batchget_material'
+
+    # 永久图文素材地址
+    ADD_NEWS_URL = \
         'https://api.weixin.qq.com/cgi-bin/material/add_news'
+    ADD_NEW_PIC_URL = \
+        'https://api.weixin.qq.com/cgi-bin/media/uploadimg'
+    UPDATE_NEWS_URL = \
+        'https://api.weixin.qq.com/cgi-bin/material/update_news'
+
+    # 菜单管理地址
+    CREATE_MENU = ' https://api.weixin.qq.com/cgi-bin/menu/create'
+    GET_MENU = 'https://api.weixin.qq.com/cgi-bin/menu/get'
+    DEL_MENU = 'https://api.weixin.qq.com/cgi-bin/menu/delete'
+
     # 文件上传配置
     UPLOAD_FOLDER = os.path.join(os.path.dirname(
         __file__), 'static/uploads').replace('\\', '/')
