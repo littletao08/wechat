@@ -148,6 +148,42 @@ def upload_media(app_id, files, media_type):
     return res
 
 
+def update_media(app_id):
+    """更新所有未到期的临时素材
+
+    通过app_id查找数据库中存在记录的素材, 下载本地不存在素材
+    并在数据库中标记素材地址
+
+    Args:
+        app_id (str): 所需要更新素材的公众号app_id
+    """
+    access_token = get_token(app_id)
+    t = Token.query.filter_by(app_id=app_id).first()
+    medias = t.medias
+    url = current_app.config['GET_MEDIA_URL']
+    for m in medias:
+        params = {
+            'access_token': access_token,
+            'media_id': m.media_id
+        }
+        now = int(time.time())
+        if now - m.created_at < 259200:
+            res = requests.get(url, params=params)
+            filename = res.headers.get('Content-disposition').split('"')[1]
+            save_path = os.path.join(
+                current_app.config['UPLOAD_FOLDER'], filename
+            )
+
+            if not os.path.exists(save_path):
+                with open(save_path, 'wb+') as f:
+                    f.write(res.content)
+
+            m.locale_url = 'uploads/' + filename
+            db.session.add(m)
+
+    db.session.commit()
+
+
 def download_media(app_id, media_id):
     token = get_token(app_id)
     m = Media.query.filter_by(media_id=media_id).first()
@@ -175,6 +211,6 @@ def download_media(app_id, media_id):
     db.session.commit()
 
     response = make_response(send_file(save_path))
-    response.headers['Content-disposition'] = res.headers.get('Content-disposition')
+    response.headers['Content-disposition'] = res.headers['Content-disposition']
 
     return response
