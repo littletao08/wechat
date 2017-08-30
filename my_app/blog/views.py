@@ -215,3 +215,9 @@ def get_media(app_id):
     media_id = request.args.get('media_id')
     response = tools.download_media(app_id, media_id)
     return response
+
+
+@blog.route('/update_media/<app_id>')
+def update_media(app_id):
+    tools.update_media(app_id)
+    return redirect(url_for('blog.show_media', app_id=app_id))
