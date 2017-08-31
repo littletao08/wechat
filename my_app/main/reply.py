@@ -97,10 +97,13 @@ class ImageMsg(Msg):
 
     def save(self):
         msg = super(ImageMsg, self).save()
-        media = models.Media()
-        media.media_type = 'image'
-        media.created_at = int(time.time())
-        media.media_id = self.Image.MediaId
+        media = models.Media.query.filter_by(
+            media_id=self.Image.MediaId).first()
+        if media is None:
+            media = models.Media()
+            media.media_type = 'image'
+            media.created_at = int(time.time())
+            media.media_id = self.Image.MediaId
         msg.media = media
         return msg
 
@@ -135,10 +138,13 @@ class VoiceMsg(Msg):
 
     def save(self):
         msg = super(VoiceMsg, self).save()
-        media = models.Media()
-        media.media_type = 'voice'
-        media.created_at = int(time.time())
-        media.media_id = self.Voice.MediaId
+        media = models.Media.query.filter_by(
+            media_id=self.Voice.MediaId).first()
+        if media is None:
+            media = models.Media()
+            media.media_type = 'voice'
+            media.created_at = int(time.time())
+            media.media_id = self.Voice.MediaId
         msg.media = media
         return msg
 
@@ -173,10 +179,13 @@ class VideoMsg(Msg):
 
     def save(self):
         msg = super(VideoMsg, self).save()
-        media = models.Media()
-        media.media_type = 'video'
-        media.created_at = int(time.time())
-        media.media_id = self.Video.MediaId
+        media = models.Media.query.filter_by(
+            media_id=self.Voice.MediaId).first()
+        if media is None:
+            media = models.Media()
+            media.media_type = 'video'
+            media.created_at = int(time.time())
+            media.media_id = self.Video.MediaId
         media.title = self.Video.Title
         media.description = self.Video.Description
         msg.media = media
@@ -217,15 +226,18 @@ class MusicMsg(Msg):
 
     def save(self):
         msg = super(MusicMsg, self).save()
-        m = models.Media()
-        m.media_type = 'music'
-        m.created_at = int(time.time())
-        m.thumb_media_id = self.Music.ThumbMediaId
-        m.title = self.Music.Title
-        m.description = self.Music.Description
-        m.music_url = self.Music.MusicUrl
-        m.hq_music_url = self.Music.HQMusicUrl
-        msg.media = m
+        media = models.Media.query.filter_by(
+            media_id=self.Music.ThumbMediaId).first()
+        if media is None:
+            media = models.Media()
+            media.media_type = 'music'
+            media.created_at = int(time.time())
+            media.thumb_media_id = self.Music.ThumbMediaId
+            media.title = self.Music.Title
+            media.description = self.Music.Description
+            media.music_url = self.Music.MusicUrl
+            media.hq_music_url = self.Music.HQMusicUrl
+        msg.media = media
         return msg
 
 
