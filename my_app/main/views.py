@@ -77,8 +77,7 @@ class MainView(MethodView):
                     item.Description = u'系统安装与配置, windows, linux'
                     item.PicUrl = u'https://img3.doubanio.com/' \
                         'view/photo/l/public/p2497391244.webp'
-                    item.Url = u'http://wangmiao.site/2017/07/29/' \
-                        '%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE/'
+                    item.Url = u'http://wangmiao.site'
 
                     articles = [item]
                     reply_msg = reply.NewsMsg(articles)
@@ -96,7 +95,7 @@ class MainView(MethodView):
                         res = res.json()
 
                         item = reply.item()
-                        item.Title = res['caption'] + res['dateline']
+                        item.Title = res['content'] + res['dateline']
                         item.Description = res['content']
                         item.PicUrl = res['picture']
                         item.Url = 'http://news.iciba.com/views/dailysentence/daily.html#!/detail/title/' + res['dateline']
@@ -104,11 +103,11 @@ class MainView(MethodView):
                     reply_msg = reply.NewsMsg(articles)
                 if msg.EventKey == 'music':
                     music = reply.Music()
-                    music.ThumbMediaId = 'WE2m6Kj9EVUKZPujgItg4BRyPA3HU8NuKjucqdH4cr8'
+                    music.ThumbMediaId = '6QHtH_ihEVEblVDXdtDJZmG_C_dwqlXWGpvZMMqQu65TL2Tn_cmh-DDTW1RIfTz6'
                     music.Title = 'Nothing on you'
                     music.Description = 'Beautiful girls all over the world'
-                    music.MusicUrl = 'http://music.163.com/outchain/player?type=2&id=227707'
-                    music.HQMusicUrl = 'http://music.163.com/outchain/player?type=2&id=227707'
+                    music.MusicUrl = 'http://other.web.ra01.sycdn.kuwo.cn/resource/n1/2011/06/14/2055048587.mp3'
+                    music.HQMusicUrl = 'http://other.web.rc01.sycdn.kuwo.cn/resource/n3/4/6/2041343348.mp3'
                     reply_msg = reply.MusicMsg()
                     reply_msg.Music = music
             else:
