@@ -107,8 +107,8 @@ class MainView(MethodView):
                     music.ThumbMediaId = 'WE2m6Kj9EVUKZPujgItg4BRyPA3HU8NuKjucqdH4cr8'
                     music.Title = 'Nothing on you'
                     music.Description = 'Beautiful girls all over the world'
-                    music.MusicUrl = 'http://other.web.ra01.sycdn.kuwo.cn/resource/n1/2011/06/14/2055048587.mp3'
-                    music.HQMusicUrl = 'http://other.web.rc01.sycdn.kuwo.cn/resource/n3/4/6/2041343348.mp3'
+                    music.MusicUrl = 'http://music.163.com/outchain/player?type=2&id=227707'
+                    music.HQMusicUrl = 'http://music.163.com/outchain/player?type=2&id=227707'
                     reply_msg = reply.MusicMsg()
                     reply_msg.Music = music
             else:
