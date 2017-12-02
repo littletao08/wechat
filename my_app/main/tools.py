@@ -2,7 +2,6 @@
 
 import hashlib
 import urllib
-import urllib2
 import json
 import time
 import os
@@ -61,8 +60,8 @@ def get_fresh_token(app_id, app_secret):
         'secret': app_secret
     }
 
-    res = urllib2.urlopen(
-        current_app.config['ACCESS_TOKEN_URL'], urllib.urlencode(data))
+    res = urllib.request.urlopen(
+        current_app.config['ACCESS_TOKEN_URL'], urllib.parse.urlencode(data))
     result = json.loads(res.read())
     return result
 
@@ -211,6 +210,7 @@ def download_media(app_id, media_id):
     db.session.commit()
 
     response = make_response(send_file(save_path))
-    response.headers['Content-disposition'] = res.headers['Content-disposition']
+    response.headers['Content-disposition'] = \
+        res.headers['Content-disposition']
 
     return response

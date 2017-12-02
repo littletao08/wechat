@@ -39,7 +39,6 @@ class Msg(object):
         try:
             result = et.tostring(to_element(self), encoding='utf-8')
         except Exception as e:
-            print u'消息类转换错误', e
             result = 'success'
         return result
 

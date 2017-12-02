@@ -39,7 +39,7 @@ def register():
 
     """
     if current_user.is_authenticated:
-        flash(u'您已登录!', 'info')
+        flash('您已登录!', 'info')
         return redirect(url_for('blog.index'))
 
     form = RegisterForm(request.form)
@@ -53,7 +53,7 @@ def register():
 
         if existing_username:
             flash(
-                u'用户名或电子邮箱已存在, 请重新输入!',
+                '用户名或电子邮箱已存在, 请重新输入!',
                 'warning'
             )
             return render_template('blog/register.html', form=form)
@@ -64,7 +64,7 @@ def register():
         account.password = password
         db.session.add(account)
         db.session.commit()
-        flash(u'您已注册, 请登录', 'success')
+        flash('您已注册, 请登录', 'success')
         return redirect(url_for('blog.index'))
 
     if form.errors:
@@ -79,7 +79,7 @@ def login():
     登录视图函数, 密码验证, 登录后跳转
     """
     if current_user.is_authenticated:
-        flash(u'您已登录!', 'info')
+        flash('您已登录!', 'info')
         return redirect(url_for('blog.index'))
 
     form = LoginForm(request.form)
@@ -89,11 +89,11 @@ def login():
         account = Account.query.filter_by(email=email).first()
 
         if not (account and account.check_password(password)):
-            flash(u'用户名或密码错误', 'warning')
+            flash('用户名或密码错误', 'warning')
             return redirect(url_for('blog.login'))
 
         login_user(account, form.remember_me.data)
-        flash(u'你已成功登录', 'success')
+        flash('你已成功登录', 'success')
         return redirect(request.args.get('next') or url_for('blog.index'))
 
     if form.errors:
@@ -125,7 +125,7 @@ def add_wechat():
 
         t = Token.query.filter_by(app_id=app_id).first()
         if t:
-            flash(u'您所添加的微信app_id已存在, 请添加其他公众号', 'warning')
+            flash('您所添加的微信app_id已存在, 请添加其他公众号', 'warning')
             return redirect(url_for('blog.add_wechat'))
 
         email = current_user.email
@@ -141,7 +141,7 @@ def add_wechat():
         db.session.add(t)
         db.session.commit()
 
-        flash(u'添加公众号成功!', 'success')
+        flash('添加公众号成功!', 'success')
         return redirect(url_for('blog.index'))
 
     if form.errors:
@@ -175,12 +175,12 @@ def add_media(app_id):
         try:
             res = tools.upload_media(app_id, media_file, media_type)
         except KeyError as e:
-            print 'keyerror'
+            print('keyerror')
             flash(res.text, 'danger')
         except Exception as e:
             flash(str(e), 'danger')
         else:
-            flash(unicode(media_file.filename) + u'上传成功', 'success')
+            flash(unicode(media_file.filename) + '上传成功', 'success')
         finally:
             return redirect(url_for('blog.add_media', app_id=app_id))
 

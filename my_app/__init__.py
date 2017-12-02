@@ -5,13 +5,12 @@
 因此采用工厂函数的方式, 在运行时在初始化app
 """
 
-import logging
 
-from flask import Flask, url_for
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
-from config import config
+from .config import config
 
 
 # 指定数据库
@@ -19,8 +18,9 @@ db = SQLAlchemy()
 # 设置flask_login
 login_manager = LoginManager()
 login_manager.login_view = 'blog.login'
-login_manager.login_message = u'请先登录.'
+login_manager.login_message = '请先登录.'
 login_manager.login_message_category = 'warning'
+
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -39,5 +39,5 @@ def create_app(config_name):
     # 初始化数据库
     with app.app_context():
         db.create_all()
-        
+
     return app

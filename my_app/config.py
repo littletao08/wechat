@@ -2,7 +2,7 @@
 
 import os
 
-base_dir = os.path.join(os.path.dirname(__file__), 'static/data')
+base_dir = os.path.join(os.path.dirname(__file__))
 
 
 class Config(object):

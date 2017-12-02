@@ -35,20 +35,20 @@
 
 - 编辑WSGI configuration file, 添加相应的环境变量和配置程序入口:
 
-  ```python
-  import sys
-  import os
+    ```python
+    import sys
+    import os
 
-  os.environ['FLASK_CONFIG'] = 'production'
-  os.environ['DATABASE_URI'] = 'mysql+mysqldb://username:password \
+    os.environ['FLASK_CONFIG'] = 'production'
+    os.environ['DATABASE_URI'] = 'mysql+mysqldb://username:password \
     @username.mysql.pythonanywhere-services.com/username$dbname'
 
-  path = '/home/username/wechat'
-  if path not in sys.path:
+    path = '/home/username/wechat'
+    if path not in sys.path:
       sys.path.append(path)
 
-  from manager import app as application
-  ```
+    from manager import app as application
+    ```
 
 现在应该可以应该可以运行了
 
